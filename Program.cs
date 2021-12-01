@@ -13,6 +13,7 @@ namespace MonikArt
         [STAThread]
         static void Main(string[] args)
         {
+            WindowMax();
             DirectoryCr();
             renderMenu:
             Console.Clear();
@@ -32,10 +33,15 @@ namespace MonikArt
                     goto renderMenu;
             }
         }
+
         static void DirectoryCr()
         {
             Directory.CreateDirectory("runtime");
             Directory.CreateDirectory("Monar");
+        }
+        static void WindowMax()
+        {
+            KeyboardManager.Resize(1);
         }
     }
 }
