@@ -41,7 +41,7 @@ namespace MonikArt
         }
         static void WindowMax()
         {
-            KeyboardManager.Resize(1);
+            WindowScale.Resize(1);
         }
     }
 }
