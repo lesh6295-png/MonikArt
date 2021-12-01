@@ -35,3 +35,17 @@ static class WindowScale
         DllImports.SetConsoleDisplayMode(hConsole, pos, out xy);
     } 
 }
+public static class WindowSize
+{
+    [DllImport("kernel32.dll")]
+    static extern COORD GetLargestConsoleWindowSize(IntPtr hConsoleOutput);
+    public static COORD GetConsoleSymbolSize()
+    {
+        return GetLargestConsoleWindowSize(WindowScale.DllImports.GetStdHandle(-11));
+    }
+}
+public struct COORD
+{
+    public short X;
+    public short Y;
+}

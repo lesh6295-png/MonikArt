@@ -33,11 +33,11 @@ namespace MonikArt
             newFile.fontSize = size;
             ConsoleHelper.SetCurrentFont("Lucida Console", Convert.ToInt16(size));
 
-            
+            COORD sizeWN = WindowSize.GetConsoleSymbolSize();
 
-            Console.WriteLine($"Enter horisontal resolution({Console.LargestWindowHeight}):");
+            Console.WriteLine($"Enter horisontal resolution({sizeWN.X}):");
             newFile.widhtResolution = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine($"Enter vertical resolution({Console.LargestWindowWidth}):");
+            Console.WriteLine($"Enter vertical resolution({sizeWN.Y}):");
             newFile.heightResolution = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Enter fps(null to default valve):");
             string q = Console.ReadLine();
@@ -85,8 +85,10 @@ namespace MonikArt
                 GC.Collect();
                 frames.Sort(StrCom);
                 Console.WriteLine("Start build monar");
+                int frC = 0;
                 foreach(FileInfo fi in frames)
                 {
+                    frC++;
                     string frame = "";
                     Bitmap bitmap = new Bitmap(fi.FullName);
                     bitmap.ToGray();
@@ -100,6 +102,8 @@ namespace MonikArt
                         frame += "\n";
                     }
                     newFile.frames.Add(frame);
+                    Console.SetCursorPosition(0, 3);
+                    Console.Write($"Frames: {frC}/{frames.Count}");
 
                 }
                 File.WriteAllText($"Monar/{newFile.name}.monar", Newtonsoft.Json.JsonConvert.SerializeObject(newFile, Newtonsoft.Json.Formatting.Indented));

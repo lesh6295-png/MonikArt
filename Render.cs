@@ -5,12 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
+using Microsoft.VisualBasic.Devices;
 namespace MonikArt
 {
     public static class Render
     {
         static MonarFile monar;
         static int spaceSize = 0;
+        public static bool isDevMod = false;
+        static ComputerInfo ci;
+        static Process thisPr;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
         
@@ -31,11 +36,19 @@ namespace MonikArt
             WindowScale.Resize(1);
         play:
             spaceSize = (Console.BufferWidth - monar.widhtResolution) / 2;
+            if (isDevMod) {
+                thisPr = Process.GetCurrentProcess();
+                ci = new ComputerInfo();
+            }
             for (int i = 0; i < monar.frames.Count - 1; i++)
             {
+                DateTime dateTime = DateTime.Now;
                 Console.WriteLine(monar.frames[i]);
-                Console.SetCursorPosition(0, 0);
                 System.Threading.Thread.Sleep(Convert.ToInt32(1000 / monar.fps));
+                Console.SetCursorPosition(0, 0);
+                if (isDevMod)
+                    Console.WriteLine($"FRAME : {i + 1}, TARGET_FRAMERATE: {monar.fps}, RAM: {thisPr.PrivateMemorySize64/1024/1024}MB/{ci.TotalPhysicalMemory/1024/1024}MB, FRAME_RENDER_TIME: {DateTime.Now - dateTime}"); thisPr.Refresh();
+
             }
             if (monar.isLooping)
                 goto play;

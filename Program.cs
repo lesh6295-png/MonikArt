@@ -19,10 +19,11 @@ namespace MonikArt
         {
             WindowMax();
             DirectoryCr();
-            renderMenu:
+        renderMenu:
+            Render.isDevMod = false;
             Console.Clear();
             Console.WriteLine(appVersion);
-            Console.WriteLine("Press 1 to open .monar file, 2 to create new .monar file");
+            Console.WriteLine("Press 1 to open .monar file, 2 to create new .monar file, 3 to open .monar file with develop mode");
             switch (Convert.ToInt32(Console.ReadLine()))
             {
                 case 1:
@@ -30,6 +31,10 @@ namespace MonikArt
                     break;
                 case 2:
                     Builder.Build();
+                    break;
+                case 3:
+                    Render.isDevMod = true;
+                    Render.Rend();
                     break;
                 default:
                     Console.WriteLine("Unknown command!");
