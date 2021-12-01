@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.IO;
 namespace MonikArt
 {
     class Program
     {
         public const string appVersion = "MonikArt 0.0.0.1"; 
 
-        
+        [STAThread]
         static void Main(string[] args)
         {
+            DirectoryCr();
             renderMenu:
             Console.Clear();
             Console.WriteLine(appVersion);
@@ -20,7 +21,7 @@ namespace MonikArt
             switch (Convert.ToInt32(Console.ReadLine()))
             {
                 case 1:
-
+                    Render.Rend();
                     break;
                 case 2:
                     Builder.Build();
@@ -30,6 +31,11 @@ namespace MonikArt
                     System.Threading.Thread.Sleep(750);
                     goto renderMenu;
             }
+        }
+        static void DirectoryCr()
+        {
+            Directory.CreateDirectory("runtime");
+            Directory.CreateDirectory("Monar");
         }
     }
 }
