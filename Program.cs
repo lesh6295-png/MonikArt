@@ -11,7 +11,11 @@ namespace MonikArt
         public const string appVersion = "MonikArt 0.0.0.1"; 
 
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
+        {
+            MainMenuRender();
+        }
+        public static void MainMenuRender()
         {
             WindowMax();
             DirectoryCr();
