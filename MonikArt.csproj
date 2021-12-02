@@ -54,7 +54,7 @@
     <Compile Include="Builder.cs" />
     <Compile Include="ConsoleFont.cs" />
     <Compile Include="Ffmpeg\Ffmpeg.cs" />
-    <Compile Include="WindowScale.cs" />
+    <Compile Include="WinApi.cs" />
     <Compile Include="MonarFile.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

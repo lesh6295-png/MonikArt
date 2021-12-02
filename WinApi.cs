@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows.Forms;
 
 static class WindowScale
@@ -48,4 +49,36 @@ public struct COORD
 {
     public short X;
     public short Y;
+}
+public static class WindowWrite
+{
+    [DllImport("kernel32.dll", SetLastError =true)]
+    internal static extern bool WriteConsoleOutputCharacter(
+        IntPtr hConsoleOutput,
+        StringBuilder lpCharacter,
+        uint nLength,
+        COORD dwWriteCoord,
+        out uint lpNumberOfCharsWritten);
+    public static void WriteConsole(string line)
+    {
+        StringBuilder sb = new StringBuilder(line);
+        COORD st; st.X = 0; st.Y = 0;
+        uint outp = 0;
+        WriteConsoleOutputCharacter(WindowScale.DllImports.GetStdHandle(-11), sb, Convert.ToUInt32(line.Length), st, out outp);
+    }
+    public static void WriteConsole(string line, short y)
+    {
+        StringBuilder sb = new StringBuilder(line);
+        COORD st; st.X = 0; st.Y = y;
+        uint outp = 0;
+        WriteConsoleOutputCharacter(WindowScale.DllImports.GetStdHandle(-11), sb, Convert.ToUInt32(line.Length), st, out outp);
+    }
+}
+public static class GetLastErr
+{
+    public static void Build()
+    {
+        throw new Exception(Convert.ToString(System.Runtime.InteropServices.Marshal.GetLastWin32Error()));
+    }
+
 }

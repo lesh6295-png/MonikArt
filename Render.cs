@@ -12,13 +12,47 @@ namespace MonikArt
     public static class Render
     {
         static MonarFile monar;
-        static int spaceSize = 0;
+        static int spaceSizeX = 0;
+        static int spaceSizeY = 0;
         public static bool isDevMod = false;
         static ComputerInfo ci;
         static Process thisPr;
+        static string buffer = "";
+        static ulong totalFr = 0;
+        static DateTime dateTime = DateTime.Now;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
-        
+        static string RenderBuffer(Frame fr)
+        {
+            buffer = "";
+            COORD DS = WindowSize.GetConsoleSymbolSize();
+            if (DS.X < monar.widhtResolution || DS.Y < monar.heightResolution)
+                throw new Exception("Too low display size");
+            if (isDevMod)
+            {
+                WindowWrite.WriteConsole($"FRAME : {fr.num}, TARGET_FRAMERATE: {monar.fps}, RAM: {thisPr.PrivateMemorySize64 / 1024 / 1024}MB/{ci.TotalPhysicalMemory / 1024 / 1024}MB, FRAME_RENDER_TIME: {DateTime.Now - dateTime}, TOTAL_FRAMES_RENDERING: {totalFr}, CONSOLE_SIZE: X: {DS.X}, Y: {DS.Y}, MONAR_SIZE: X: {monar.heightResolution}, Y: {monar.widhtResolution},");
+                dateTime = DateTime.Now;
+                thisPr.Refresh();
+            }
+            for(int i = 0; i < spaceSizeY; i++)
+            {
+                
+            }
+            for (int i = 0; i < fr.lines.Count; i++)
+            {
+                buffer += BackGroundRen(spaceSizeX-1);
+                buffer += fr.lines[i];
+                buffer += BackGroundRen(spaceSizeX-2);
+            }
+            return buffer;
+        }
+        static string BackGroundRen(int size)
+        {
+            string s = "";
+            for (int i = 0; i < size; i++)
+                s += monar.defaultBackgr;
+            return s;
+        }
         public static void Rend()
         {
             
@@ -35,19 +69,25 @@ namespace MonikArt
             SetWindowPos(ConsoleHandle, new IntPtr(-2), 0, 0, monar.widhtResolution*monar.fontSize, monar.heightResolution*monar.fontSize, 0x0040);
             WindowScale.Resize(1);
         play:
-            spaceSize = (Console.BufferWidth - monar.widhtResolution) / 2;
+            spaceSizeX = (WindowSize.GetConsoleSymbolSize().X - monar.widhtResolution) / 2;
+            spaceSizeY = (WindowSize.GetConsoleSymbolSize().Y - monar.heightResolution) / 2;
             if (isDevMod) {
                 thisPr = Process.GetCurrentProcess();
                 ci = new ComputerInfo();
             }
             for (int i = 0; i < monar.frames.Count - 1; i++)
             {
-                DateTime dateTime = DateTime.Now;
-                Console.WriteLine(monar.frames[i]);
-                System.Threading.Thread.Sleep(Convert.ToInt32(1000 / monar.fps));
-                Console.SetCursorPosition(0, 0);
+                totalFr++;
                 if (isDevMod)
-                    Console.WriteLine($"FRAME : {i + 1}, TARGET_FRAMERATE: {monar.fps}, RAM: {thisPr.PrivateMemorySize64/1024/1024}MB/{ci.TotalPhysicalMemory/1024/1024}MB, FRAME_RENDER_TIME: {DateTime.Now - dateTime}"); thisPr.Refresh();
+                {
+                    WindowWrite.WriteConsole(RenderBuffer(monar.frames[i]), 1);
+                }
+                else
+                {
+                    WindowWrite.WriteConsole(RenderBuffer(monar.frames[i]));
+                }
+                System.Threading.Thread.Sleep(Convert.ToInt32(1000 / monar.fps));
+                //Console.SetCursorPosition(0, 0);
 
             }
             if (monar.isLooping)

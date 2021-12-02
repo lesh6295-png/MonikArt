@@ -8,11 +8,12 @@ namespace MonikArt
 {
     class Program
     {
-        public const string appVersion = "MonikArt 0.0.0.1"; 
+        public const string appVersion = "MonikArt 0.2.3.0"; 
 
         [STAThread]
         static void Main()
         {
+            Directory.Delete("runtime", true);
             MainMenuRender();
         }
         public static void MainMenuRender()
@@ -22,8 +23,11 @@ namespace MonikArt
         renderMenu:
             Render.isDevMod = false;
             Console.Clear();
+
+
             Console.WriteLine(appVersion);
             Console.WriteLine("Press 1 to open .monar file, 2 to create new .monar file, 3 to open .monar file with develop mode");
+            
             switch (Convert.ToInt32(Console.ReadLine()))
             {
                 case 1:

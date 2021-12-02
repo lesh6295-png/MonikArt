@@ -58,6 +58,16 @@ namespace MonikArt
             Console.WriteLine("Enter name:");
             newFile.name = Console.ReadLine();
 
+            Console.WriteLine("Enter default background symbol(space on default):");
+            string w = Console.ReadLine();
+            if(w == "")
+            {
+                newFile.defaultBackgr = ' ';
+            }
+            else
+            {
+                newFile.defaultBackgr = w[0];
+            }
             
 
             // magic
@@ -89,17 +99,19 @@ namespace MonikArt
                 foreach(FileInfo fi in frames)
                 {
                     frC++;
-                    string frame = "";
+                    Frame frame; frame.lines = new List<string>(); frame.num = frC;
                     Bitmap bitmap = new Bitmap(fi.FullName);
                     bitmap.ToGray();
+                    string line = "";
                     for(int y = 0; y < bitmap.Height; y++)
                     {
                         for(int x = 0; x < bitmap.Width; x++)
                         {
                             Color color = bitmap.GetPixel(x, y);
-                            frame += grad[Convert.ToInt32((grad.Length-1) * color.R / 255)];
+                            line += grad[Convert.ToInt32((grad.Length-1) * color.R / 255)];
                         }
-                        frame += "\n";
+                        frame.lines.Add(line);
+                        line = "";
                     }
                     newFile.frames.Add(frame);
                     Console.SetCursorPosition(0, 3);
