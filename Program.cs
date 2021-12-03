@@ -13,7 +13,14 @@ namespace MonikArt
         [STAThread]
         static void Main()
         {
-            Directory.Delete("runtime", true);
+            try
+            {
+                Directory.Delete("runtime", true);
+            }
+            catch
+            {
+
+            }
             MainMenuRender();
         }
         public static void MainMenuRender()
