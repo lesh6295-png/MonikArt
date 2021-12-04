@@ -12,14 +12,15 @@ namespace MonikArt
     public static class Render
     {
         static MonarFile monar;
-        static int spaceSizeX = 0;
-        static int spaceSizeY = 0;
+        static double spaceSizeX = 0;
+        static double spaceSizeY = 0;
         public static bool isDevMod = false;
         static ComputerInfo ci;
         static Process thisPr;
         static string buffer = "";
         static ulong totalFr = 0;
         static DateTime dateTime = DateTime.Now;
+        const int xOffset = 17;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
         static string RenderBuffer(Frame fr)
@@ -30,20 +31,24 @@ namespace MonikArt
                 throw new Exception("Too low display size");
             if (isDevMod)
             {
-                WindowWrite.WriteConsole($"FRAME : {fr.num}, TARGET_FRAMERATE: {monar.fps}, RAM: {thisPr.PrivateMemorySize64 / 1024 / 1024}MB/{ci.TotalPhysicalMemory / 1024 / 1024}MB, FRAME_RENDER_TIME: {DateTime.Now - dateTime}, TOTAL_FRAMES_RENDERING: {totalFr}, CONSOLE_SIZE: X: {DS.X}, Y: {DS.Y}, MONAR_SIZE: X: {monar.heightResolution}, Y: {monar.widhtResolution},");
+                WindowWrite.WriteConsole($"FRAME : {fr.num}, TARGET_FRAMERATE: {monar.fps}, RAM: {thisPr.PrivateMemorySize64 / 1024 / 1024}MB/{ci.TotalPhysicalMemory / 1024 / 1024}MB, FRAME_RENDER_TIME: {DateTime.Now - dateTime}, TOTAL_FRAMES_RENDERING: {totalFr}, CONSOLE_SIZE: X: {DS.X}, Y: {DS.Y}, MONAR_SIZE: X: {monar.widhtResolution}, Y: {monar.heightResolution}, SPACE_SIZE : X: {spaceSizeX}, Y: {spaceSizeY}");
                 dateTime = DateTime.Now;
                 thisPr.Refresh();
             }
-            for(int i = 0; i < spaceSizeY; i++)
+            for (int i = 0; i < spaceSizeY; i++)
             {
-                
+                for (int j = 0; j < DS.X - 4; j++)
+                {
+                    buffer += monar.defaultBackgr;
+                }
             }
             for (int i = 0; i < fr.lines.Count; i++)
             {
-                buffer += BackGroundRen(spaceSizeX-1);
+                buffer += BackGroundRen(Convert.ToInt32(Math.Ceiling(spaceSizeX+1+xOffset)));
                 buffer += fr.lines[i];
-                buffer += BackGroundRen(spaceSizeX-2);
+                buffer += BackGroundRen(Convert.ToInt32(Math.Floor(spaceSizeX-xOffset)));
             }
+
             return buffer;
         }
         static string BackGroundRen(int size)
@@ -55,23 +60,24 @@ namespace MonikArt
         }
         public static void Rend()
         {
-            
             OpenFileDialog opf = new OpenFileDialog
             {
                 Filter = "Monar file(*.monar)|*.monar"
             };
-            if(opf.ShowDialog() == DialogResult.OK)
+            if (opf.ShowDialog() == DialogResult.OK)
             {
                 monar = Newtonsoft.Json.JsonConvert.DeserializeObject<MonarFile>(File.ReadAllText(opf.FileName));
             }
             ConsoleHelper.SetCurrentFont("Lucida Console", Convert.ToInt16(monar.fontSize));
             IntPtr ConsoleHandle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
-            SetWindowPos(ConsoleHandle, new IntPtr(-2), 0, 0, monar.widhtResolution*monar.fontSize, monar.heightResolution*monar.fontSize, 0x0040);
+            SetWindowPos(ConsoleHandle, new IntPtr(-2), 0, 0, monar.widhtResolution * monar.fontSize, monar.heightResolution * monar.fontSize, 0x0040);
             WindowScale.Resize(1);
+            SetCursor.Set(9999, 9999);
         play:
             spaceSizeX = (WindowSize.GetConsoleSymbolSize().X - monar.widhtResolution) / 2;
             spaceSizeY = (WindowSize.GetConsoleSymbolSize().Y - monar.heightResolution) / 2;
-            if (isDevMod) {
+            if (isDevMod)
+            {
                 thisPr = Process.GetCurrentProcess();
                 ci = new ComputerInfo();
             }
@@ -86,15 +92,17 @@ namespace MonikArt
                 {
                     WindowWrite.WriteConsole(RenderBuffer(monar.frames[i]));
                 }
-                System.Threading.Thread.Sleep(Convert.ToInt32(1000 / monar.fps));
-                //Console.SetCursorPosition(0, 0);
+                if (monar.fps != 0)
+                {
+                    System.Threading.Thread.Sleep(Convert.ToInt32(1000 / monar.fps));
+                }
 
             }
             if (monar.isLooping)
                 goto play;
             else
             {
-                loop:
+            loop:
                 Console.Clear();
                 Console.WriteLine("Do you want replay video?(y/n)");
                 string inp = Console.ReadLine();

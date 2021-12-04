@@ -74,11 +74,24 @@ public static class WindowWrite
         WriteConsoleOutputCharacter(WindowScale.DllImports.GetStdHandle(-11), sb, Convert.ToUInt32(line.Length), st, out outp);
     }
 }
-public static class GetLastErr
+public static class SetCursor
 {
-    public static void Build()
+    [DllImport("user32.dll")]
+    static extern bool SetCursorPos(int x, int y);
+    public static void Set(int x, int y)
     {
-        throw new Exception(Convert.ToString(System.Runtime.InteropServices.Marshal.GetLastWin32Error()));
+        SetCursorPos(x, y);
     }
 
+}
+public static class SetBufferSize
+{
+    [DllImport("kernel32.dll")]
+    static extern bool SetConsoleScreenBufferSize(IntPtr hConsoleOutput, COORD dwSize);
+    public static void ConsoleBuffer()
+    {
+        COORD bs = WindowSize.GetConsoleSymbolSize();
+        bs.X -= 3;
+        SetConsoleScreenBufferSize(WindowScale.DllImports.GetStdHandle(-11), bs);
+    }
 }

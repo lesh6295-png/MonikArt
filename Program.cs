@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.IO;
 namespace MonikArt
 {
     class Program
     {
-        public const string appVersion = "MonikArt 0.2.3.0"; 
+        public const string appVersion = "MonikArt 0.4.2.0"; 
 
         [STAThread]
         static void Main()
         {
+#if DEBUG
             try
             {
                 Directory.Delete("runtime", true);
@@ -21,6 +22,7 @@ namespace MonikArt
             {
 
             }
+#endif
             MainMenuRender();
         }
         public static void MainMenuRender()
@@ -30,6 +32,7 @@ namespace MonikArt
         renderMenu:
             Render.isDevMod = false;
             Console.Clear();
+            SetBufferSize.ConsoleBuffer();
 
 
             Console.WriteLine(appVersion);

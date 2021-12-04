@@ -35,11 +35,13 @@ namespace MonikArt
 
             COORD sizeWN = WindowSize.GetConsoleSymbolSize();
 
-            Console.WriteLine($"Enter horisontal resolution({sizeWN.X}):");
+            ConsoleHelper.SetCurrentFont("Lucida Console", Convert.ToInt16(12));
+
+            Console.WriteLine($"Enter horisontal resolution({sizeWN.X}/{Console.WindowWidth}):");
             newFile.widhtResolution = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine($"Enter vertical resolution({sizeWN.Y}):");
             newFile.heightResolution = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("Enter fps(null to default valve):");
+            Console.WriteLine("Enter fps(null to default valve, 0 to unlimited):");
             string q = Console.ReadLine();
             if (q != "")
                 newFile.fps = Convert.ToInt32(q);
@@ -82,8 +84,21 @@ namespace MonikArt
             };
             if(ofd.ShowDialog() == DialogResult.OK)
             {
-                Ffmpeg.ChangeVideoSize(ofd.FileName, $"runtime/{thisRuntimeName}/vid.mkv", new System.Drawing.Size(newFile.widhtResolution, newFile.heightResolution));
-                Ffmpeg.SliceToFrames($"runtime/{thisRuntimeName}/vid.mkv");
+                string fl = Path.GetExtension(ofd.FileName);
+                if (fl == ".gif")
+                {
+                    if (!newFile.widhtResolution.IsOdd())
+                        newFile.widhtResolution--;
+                    if (!newFile.heightResolution.IsOdd())
+                        newFile.heightResolution--;
+                    Ffmpeg.GifChangeVideoSize(ofd.FileName, $"runtime/{thisRuntimeName}/vid.mkv", new Size(newFile.widhtResolution, newFile.heightResolution));
+                    Ffmpeg.SliceToFrames($"runtime/{thisRuntimeName}/vid.mkv");
+                }
+                else
+                {
+                    Ffmpeg.ChangeVideoSize(ofd.FileName, $"runtime/{thisRuntimeName}/vid.mkv", new System.Drawing.Size(newFile.widhtResolution, newFile.heightResolution));
+                    Ffmpeg.SliceToFrames($"runtime/{thisRuntimeName}/vid.mkv");
+                }
                 DirectoryInfo s = new DirectoryInfo($"runtime/{thisRuntimeName}");
                 var files = s.GetFiles();
                 var frames = new List<FileInfo>();
@@ -119,6 +134,8 @@ namespace MonikArt
 
                 }
                 File.WriteAllText($"Monar/{newFile.name}.monar", Newtonsoft.Json.JsonConvert.SerializeObject(newFile, Newtonsoft.Json.Formatting.Indented));
+                GC.Collect();
+                Program.MainMenuRender();
             }
         }
         static int StrCom(FileInfo x, FileInfo y)

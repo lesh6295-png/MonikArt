@@ -32,5 +32,16 @@ namespace MonikArt
             cmd.Start();
             cmd.WaitForExit();
         }
+        public static void GifChangeVideoSize(string inputPath,string outputPath, Size newSize)
+        {
+            Console.WriteLine("Start change gif size:");
+            string com = @"/K ffmpeg -i """ + inputPath + @""" -s " + newSize.Width + "x" + newSize.Height + $@" ""{outputPath}""";
+            Process cmd = new Process();
+            cmd.StartInfo.Arguments = com;
+            cmd.StartInfo.FileName = "cmd.exe";
+            cmd.StartInfo.CreateNoWindow = true;
+            cmd.Start();
+            cmd.WaitForExit();
+        }
     }
 }
