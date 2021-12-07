@@ -11,10 +11,10 @@ namespace MonikArt
     public static class Ffmpeg
     {
         public static Size disS;
-        public static void ChangeVideoSize(string inputPath, string outputPath, Size newSize)
+        public static void ChangeVideoSize(string inputPath, string outputPath, Size newSize, int fps)
         {
             Console.WriteLine("Start change video size:");
-            string com = "/C ffmpeg -i " + inputPath + " -s " + newSize.Width + "x" + newSize.Height + " -c:a copy " + outputPath;
+            string com = "/C ffmpeg -i " + inputPath + $" -filter:v fps={fps} -s " + newSize.Width + "x" + newSize.Height + " -c:a copy " + outputPath;
             Process cmd = new Process();
             cmd.StartInfo.Arguments = com;
             cmd.StartInfo.FileName = "cmd.exe";

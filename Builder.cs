@@ -96,7 +96,11 @@ namespace MonikArt
                 }
                 else
                 {
-                    Ffmpeg.ChangeVideoSize(ofd.FileName, $"runtime/{thisRuntimeName}/vid.mkv", new System.Drawing.Size(newFile.widhtResolution, newFile.heightResolution));
+                    if (!newFile.widhtResolution.IsOdd())
+                        newFile.widhtResolution--;
+                    if (!newFile.heightResolution.IsOdd())
+                        newFile.heightResolution--;
+                    Ffmpeg.ChangeVideoSize(ofd.FileName, $"runtime/{thisRuntimeName}/vid.mkv", new System.Drawing.Size(newFile.widhtResolution, newFile.heightResolution), Convert.ToInt32(newFile.fps));
                     Ffmpeg.SliceToFrames($"runtime/{thisRuntimeName}/vid.mkv");
                 }
                 DirectoryInfo s = new DirectoryInfo($"runtime/{thisRuntimeName}");

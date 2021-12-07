@@ -36,7 +36,7 @@ namespace MonikArt
             SetBufferSize.ConsoleBuffer();
 
             Console.WriteLine(appVersion);
-            Console.WriteLine("Press 1 to open .monar file, 2 to create new .monar file, 3 to open .monar file with develop mode, 4 to made video from monar file");
+            Console.WriteLine("Press 1 to open .monar file, 2 to create new .monar file, 3 to open .monar file with develop mode, 4 to made video from monar file, 0 to quit from application");
             
             switch (Convert.ToInt32(Console.ReadLine()))
             {
@@ -52,6 +52,9 @@ namespace MonikArt
                     break;
                 case 4:
                     VideoBuild.Build();
+                    break;
+                case 0:
+                    Environment.Exit(0);
                     break;
                 default:
                     Console.WriteLine("Unknown command!");
