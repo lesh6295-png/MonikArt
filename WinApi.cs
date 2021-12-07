@@ -95,3 +95,16 @@ public static class SetBufferSize
         SetConsoleScreenBufferSize(WindowScale.DllImports.GetStdHandle(-11), bs);
     }
 }
+public static class ScreenControl
+{
+    [DllImport("user32.dll")]
+    static extern bool keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
+
+    public static void PressKey()
+    {
+        const int KEYEVENTF_EXTENDEDKEY = 0x1;
+        const int KEYEVENTF_KEYUP = 0x2;
+        keybd_event(17, 0x45, KEYEVENTF_EXTENDEDKEY, 0);
+        keybd_event(17, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP, 0);
+    }
+}

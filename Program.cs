@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 using System.IO;
 namespace MonikArt
 {
@@ -34,9 +35,8 @@ namespace MonikArt
             Console.Clear();
             SetBufferSize.ConsoleBuffer();
 
-
             Console.WriteLine(appVersion);
-            Console.WriteLine("Press 1 to open .monar file, 2 to create new .monar file, 3 to open .monar file with develop mode");
+            Console.WriteLine("Press 1 to open .monar file, 2 to create new .monar file, 3 to open .monar file with develop mode, 4 to made video from monar file");
             
             switch (Convert.ToInt32(Console.ReadLine()))
             {
@@ -50,12 +50,16 @@ namespace MonikArt
                     Render.isDevMod = true;
                     Render.Rend();
                     break;
+                case 4:
+                    VideoBuild.Build();
+                    break;
                 default:
                     Console.WriteLine("Unknown command!");
                     System.Threading.Thread.Sleep(750);
                     goto renderMenu;
             }
         }
+
 
         static void DirectoryCr()
         {

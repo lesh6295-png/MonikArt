@@ -14,5 +14,17 @@ namespace MonikArt
                 return true;
             return false;
         }
+        public static int NumberCount(this int n)
+        {
+            int count = 0;
+            int ob = n;
+            count++;
+            do
+            {
+                count++;
+                ob = ob / 10;
+            } while (ob >= 10);
+            return count;
+        }
     }
 }

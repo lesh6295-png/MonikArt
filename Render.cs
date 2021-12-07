@@ -21,10 +21,13 @@ namespace MonikArt
         static ulong totalFr = 0;
         static DateTime dateTime = DateTime.Now;
         const int xOffset = 17;
+
+        public static bool VideoR = false;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
         static string RenderBuffer(Frame fr)
         {
+            ScreenControl.PressKey();
             buffer = "";
             COORD DS = WindowSize.GetConsoleSymbolSize();
             if (DS.X < monar.widhtResolution || DS.Y < monar.heightResolution)
@@ -76,6 +79,11 @@ namespace MonikArt
         play:
             spaceSizeX = (WindowSize.GetConsoleSymbolSize().X - monar.widhtResolution) / 2;
             spaceSizeY = (WindowSize.GetConsoleSymbolSize().Y - monar.heightResolution) / 2;
+            if (VideoR)
+            {
+                monar.isLooping = false;
+                VideoBuild.frameRate = Convert.ToInt32(monar.fps);
+            }
             if (isDevMod)
             {
                 thisPr = Process.GetCurrentProcess();
@@ -83,6 +91,7 @@ namespace MonikArt
             }
             for (int i = 0; i < monar.frames.Count - 1; i++)
             {
+                Console.CursorVisible = false;
                 totalFr++;
                 if (isDevMod)
                 {
@@ -91,6 +100,16 @@ namespace MonikArt
                 else
                 {
                     WindowWrite.WriteConsole(RenderBuffer(monar.frames[i]));
+                }
+                if (VideoR)
+                {
+                    string fn = "";
+                    fn += "runtime\\vb\\qf";
+                    for (int q = 0; q < 9 - i.NumberCount(); q++)
+                        fn += "0";
+                    fn += i;
+                    fn += ".png";
+                    Screenshot.Made(fn);
                 }
                 if (monar.fps != 0)
                 {
@@ -102,21 +121,24 @@ namespace MonikArt
                 goto play;
             else
             {
-            loop:
-                Console.Clear();
-                Console.WriteLine("Do you want replay video?(y/n)");
-                string inp = Console.ReadLine();
-                switch (inp)
+                if (!VideoR)
                 {
-                    case "y":
-                        goto play;
-                    case "n":
-                        Program.MainMenuRender();
-                        break;
-                    default:
-                        Console.WriteLine("Enter y if file looping, n if file not looping");
-                        goto loop;
+                loop:
+                    Console.Clear();
+                    Console.WriteLine("Do you want replay video?(y/n)");
+                    string inp = Console.ReadLine();
+                    switch (inp)
+                    {
+                        case "y":
+                            goto play;
+                        case "n":
+                            Program.MainMenuRender();
+                            break;
+                        default:
+                            Console.WriteLine("Enter y if file looping, n if file not looping");
+                            goto loop;
 
+                    }
                 }
             }
         }

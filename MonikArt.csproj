@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -95,6 +97,8 @@
     <Compile Include="ConsoleFont.cs" />
     <Compile Include="Exc.cs" />
     <Compile Include="Ffmpeg\Ffmpeg.cs" />
+    <Compile Include="Screenshot.cs" />
+    <Compile Include="VideoBuild.cs" />
     <Compile Include="WinApi.cs" />
     <Compile Include="MonarFile.cs" />
     <Compile Include="Program.cs" />
