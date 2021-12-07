@@ -42,7 +42,7 @@ namespace MonikArt
             {
                 for (int j = 0; j < DS.X - 4; j++)
                 {
-                    buffer += monar.defaultBackgr;
+                     buffer += monar.defaultBackgr;
                 }
             }
             for (int i = 0; i < fr.lines.Count; i++)
