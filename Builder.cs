@@ -35,6 +35,7 @@ namespace MonikArt
 
             COORD sizeWN = WindowSize.GetConsoleSymbolSize();
 
+
             ConsoleHelper.SetCurrentFont("Lucida Console", Convert.ToInt16(12));
 
             Console.WriteLine($"Enter horisontal resolution({sizeWN.X}/{Console.WindowWidth}):");
@@ -71,8 +72,6 @@ namespace MonikArt
                 newFile.defaultBackgr = w[0];
             }
             
-
-            // magic
             IntPtr ConsoleHandle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
             SetWindowPos(ConsoleHandle, new IntPtr(-2), 0, 0, newFile.widhtResolution * 12, newFile.heightResolution * 12, 0x0040);
 

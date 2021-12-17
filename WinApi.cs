@@ -94,6 +94,11 @@ public static class SetBufferSize
         bs.X -= 3;
         SetConsoleScreenBufferSize(WindowScale.DllImports.GetStdHandle(-11), bs);
     }
+    public static void ConsoleBuffer(COORD s)
+    {
+        s.X -= 3;
+        SetConsoleScreenBufferSize(WindowScale.DllImports.GetStdHandle(-11), s);
+    }
 }
 public static class ScreenControl
 {

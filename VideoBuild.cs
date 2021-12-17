@@ -22,7 +22,7 @@ namespace MonikArt
                 string pathtosave = sfd.FileName;
                 Directory.CreateDirectory("runtime\\vb");
                 Render.VideoR = true;
-                Render.Rend();
+                Render.Rend(null);
                 Ffmpeg.MakeVideoFromMonar(frameRate, pathtosave);
                 Console.CursorVisible = true;
                 Program.MainMenuRender();
