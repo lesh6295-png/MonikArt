@@ -71,7 +71,18 @@ namespace MonikArt
             {
                 newFile.defaultBackgr = w[0];
             }
-            
+
+            Console.WriteLine("Enter text gradient(black-white)(skip to default):");
+            string ww = Console.ReadLine();
+            if (ww == "")
+            {
+                
+            }
+            else
+            {
+                grad = ww ;
+            }
+
             IntPtr ConsoleHandle = System.Diagnostics.Process.GetCurrentProcess().MainWindowHandle;
             SetWindowPos(ConsoleHandle, new IntPtr(-2), 0, 0, newFile.widhtResolution * 12, newFile.heightResolution * 12, 0x0040);
 
